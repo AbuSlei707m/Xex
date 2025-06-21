@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بثوث مباشرة</title>
+    <style>
+        /* General Styles */
+        :root {
+            --bg-color-dark: #181818;
+            --card-bg-dark: #202020;
+            --text-color-light: #f1f1f1;
+            --text-color-light-secondary: #aaaaaa;
+            --red-live: #cc0000;
+            --button-bg: #383838;
+            --button-hover-bg: #505050;
+            --border-color: #303030;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif; /* يفضل استخدام خطوط عربية جميلة إذا كانت متوفرة */
+            background-color: var(--bg-color-dark);
+            color: var(--text-color-light);
+            line-height: 1.6;
+            direction: rtl; /* لضمان دعم اللغة العربية */
+        }
+
+        a {
+            color: var(--text-color-light);
+            text-decoration: none;
+        }
+
+        a:hover {
+            color: var(--text-color-light-secondary);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--card-bg-dark);
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        header .logo h1 {
+            margin: 0;
+            font-size: 24px;
+            color: var(--text-color-light);
+        }
+
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar input[type="text"] {
+            background-color: #333;
+            border: 1px solid var(--border-color);
+            padding: 8px 12px;
+            border-radius: 20px;
+            color: var(--text-color-light);
+            width: 250px;
+            margin-left: 10px; /* لترك مسافة بين حقل البحث والزر */
+        }
+
+        .search-bar input[type="text"]::placeholder {
+            color: var(--text-color-light-secondary);
+        }
+
+        .search-bar button {
+            background-color: var(--button-bg);
+            color: var(--text-color-light);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .search-bar button:hover {
+            background-color: var(--button-hover-bg);
+        }
+
+        /* Main Content */
+        main {
+            padding: 20px;
+            max-width: 1300px;
+            margin: 20px auto;
+        }
+
+        /* Featured Stream Section */
+        .featured-stream {
+            margin-bottom: 40px;
+            background-color: var(--card-bg-dark);
+            border-radius: 8px;
+            overflow: hidden;
+            padding-bottom: 20px; /* لتوفير مساحة لمعلومات البث */
+        }
+
+        .featured-stream .video-player {
+            position: relative;
+            width: 100%;
+            /* 16:9 Aspect Ratio */
+            padding-bottom: 56.25%; /* (9 / 16) * 100 */
+            background-color: #000;
+            cursor: pointer; /* للإشارة إلى أنه يمكن النقر عليه */
+        }
+
+        .featured-stream .video-player img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* لضمان تغطية الصورة للمساحة */
+        }
+
+        .live-indicator-main {
+            position: absolute;
+            bottom: 15px;
+            right: 15px;
+            background-color: var(--red-live);
+            color: var(--text-color-light);
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            font-size: 0.9em;
+        }
+
+        .live-indicator-main .dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--text-color-light);
+            border-radius: 50%;
+            margin-left: 5px; /* لمسافة بين النقطة والنص */
+            animation: pulse 1.5s infinite;
+        }
+
+        .featured-stream .stream-info {
+            padding: 15px 20px 0;
+        }
+
+        .featured-stream .stream-info h2 {
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .featured-stream .stream-info .channel-name {
+            color: var(--text-color-light-secondary);
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .featured-stream .stream-info .views {
+            color: var(--text-color-light-secondary);
+            font-size: 0.9em;
+        }
+
+        /* Live Streams Grid */
+        .live-streams-grid h2 {
+            font-size: 1.6em;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .streams-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .stream-card {
+            background-color: var(--card-bg-dark);
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s ease-in-out;
+            cursor: pointer; /* للإشارة إلى أنه يمكن النقر عليه */
+        }
+
+        .stream-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stream-card .thumbnail {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            background-color: #000;
+        }
+
+        .stream-card .thumbnail img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .live-indicator {
+            position: absolute;
+            bottom: 8px;
+            left: 8px; /* تغيير إلى اليسار للمحاذاة مع تصميم يوتيوب */
+            background-color: var(--red-live);
+            color: var(--text-color-light);
+            padding: 3px 6px;
+            border-radius: 3px;
+            font-size: 0.8em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+        }
+
+        .live-indicator .dot {
+            width: 6px;
+            height: 6px;
+            background-color: var(--text-color-light);
+            border-radius: 50%;
+            margin-right: 4px; /* مسافة بين النقطة والنص */
+            animation: pulse 1.5s infinite;
+        }
+
+
+        .stream-card-info {
+            padding: 10px 12px;
+        }
+
+        .stream-card-info h3 {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .stream-card-info .channel-name {
+            color: var(--text-color-light-secondary);
+            font-size: 0.9em;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--card-bg-dark);
+            text-align: center;
+            padding: 15px;
+            margin-top: 40px;
+            color: var(--text-color-light-secondary);
+            border-top: 1px solid var(--border-color);
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0% {
+                opacity: 0.5;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0.5;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                padding: 10px;
+            }
+
+            .search-bar {
+                width: 100%;
+                margin-top: 10px;
+            }
+
+            .search-bar input[type="text"] {
+                width: calc(100% - 70px); /* Adjust width considering button */
+                margin-right: 0;
+                margin-left: 10px;
+            }
+
+            main {
+                padding: 15px;
+            }
+
+            .streams-container {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 15px;
+            }
+
+            .featured-stream .stream-info h2 {
+                font-size: 1.5em;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header .logo h1 {
+                font-size: 20px;
+            }
+
+            .search-bar input[type="text"] {
+                width: calc(100% - 60px);
+                font-size: 0.9em;
+            }
+
+            .search-bar button {
+                padding: 6px 12px;
+                font-size: 0.9em;
+            }
+
+            .streams-container {
+                grid-template-columns: 1fr; /* Stack cards vertically on very small screens */
+            }
+
+            .stream-card-info h3 {
+                font-size: 1em;
+            }
+
+            .featured-stream .stream-info h2 {
+                font-size: 1.3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="https://web.static.mmcdn.com/images/logo.svg?hash=57c3771492bf">
+            <h1>SEX broadcast</h1>
+        </div>
+        <div class="search-bar">
+            <input type="text" placeholder="بحث...">
+            <button>بحث</button>
+        </div>
+    </header>
+
+    <main>
+        <section class="featured-stream">
+            <a href="video.html" class="video-player">
+                <img src="https://via.placeholder.com/1280x720/000000/FFFFFF?text=بث+مباشر+رئيسي" alt="بث مباشر رئيسي">
+                <div class="live-indicator-main">
+                    <span class="dot"></span>
+                    <span class="text">مباشر</span>
+                </div>
+            </a>
+            <div class="stream-info">
+                <h2>عنوان البث المباشر الرئيسي</h2>
+                <p class="channel-name">اسم القناة</p>
+                <p class="views">عدد المشاهدات: 1.2M</p>
+            </div>
+        </section>
+
+        <section class="live-streams-grid">
+            <h2>بثوث مباشرة حاليًا</h2>
+            <div class="streams-container">
+                </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 بثوثي. جميع الحقوق محفوظة.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const streamsContainer = document.querySelector('.streams-container');
+            const featuredStreamPlayer = document.querySelector('.featured-stream .video-player');
+
+            // بيانات وهمية للبثوث المباشرة
+            const liveStreams = [
+                {
+                    title: 'بث مباشر: لعبة المغامرة الجديدة',
+                    channel: 'قناة الألعاب الاحترافية',
+                    thumbnail: 'https://thumb.live.mmcdn.com/ri/lau__1.jpg?58346760',
+                    videoId: 'https://edge16-atl.live.mmcdn.com/live-hls/amlst:lau__1-sd-f3f8dcc9e2e3da23e58e0ba27208e44e210ed5e7bb4da42d3803f79d59457a65_trns_h264/chunklist_w1828118934_b5128000_t64RlBTOjMwLjA=.m3u8' // معرف وهمي للفيديو
+                },
+                {
+                    title: 'Canadian sex ',
+                    channel: '1908',
+                    thumbnail: 'https://thumb.live.mmcdn.com/ri/maryjane3_14.jpg?58351396',
+                    videoId: 'https://edge27-fra.live.mmcdn.com/live-hls/amlst:maryjane3_14-sd-9fcd89605a2911b6f527a6cb20153655f52ab8ccd9c6c72ddb44f1e26f6788ad_trns_h264/chunklist_w1528657016_b4596000_t64RlBTOjYwLjA=.m3u8'
+                },
+                {
+                    title: 'الطبخ الشرقي: وصفات شهية',
+                    channel: 'مطبخ سارة',
+                    thumbnail: 'https://via.placeholder.com/320x180/000000/FFFFFF?text=طبخ+شرقي',
+                    videoId: 'cooking_recipes_3'
+                },
+                {
+                    title: 'أخبار التقنية: آخر الابتكارات',
+                    channel: 'عالم التقنية',
+                    thumbnail: 'https://via.placeholder.com/320x180/000000/FFFFFF?text=أخبار+تقنية',
+                    videoId: 'tech_news_4'
+                },
+                {
+                    title: 'تمارين رياضية للمبتدئين',
+                    channel: 'لياقة وصحة',
+                    thumbnail: 'https://via.placeholder.com/320x180/000000/FFFFFF?text=تمارين+رياضية',
+                    videoId: 'fitness_beginner_5'
+                },
+                {
+                    title: 'فنون الرسم الرقمي',
+                    channel: 'إبداع فنان',
+                    thumbnail: 'https://via.placeholder.com/320x180/000000/FFFFFF?text=رسم+رقمي',
+                    videoId: 'digital_art_6'
+                }
+            ];
+
+            // دالة لإنشاء قالب بث مباشر
+            function createStreamCard(stream) {
+                const streamCardLink = document.createElement('a');
+                streamCardLink.href = `video.html?id=${stream.videoId}`; // تمرير معرف الفيديو كباراميتر
+                streamCardLink.classList.add('stream-card');
+
+                streamCardLink.innerHTML = `
+                    <div class="thumbnail">
+                        <img src="${stream.thumbnail}" alt="${stream.title}">
+                        <div class="live-indicator">
+                            <span class="dot"></span>
+                            <span class="text">• Live</span>
+                        </div>
+                    </div>
+                    <div class="stream-card-info">
+                        <h3>${stream.title}</h3>
+                        <p class="channel-name">${stream.channel}</p>
+                    </div>
+                `;
+                return streamCardLink;
+            }
+
+            // إضافة البثوث إلى الصفحة
+            liveStreams.forEach(stream => {
+                streamsContainer.appendChild(createStreamCard(stream));
+            });
+
+            // جعل البث الرئيسي قابلاً للنقر عليه للانتقال إلى video.html
+            // تم إضافة الرابط <a href="video.html" ...> مباشرة في HTML
+            // يمكنك تخصيص هذا ليرسل معرف فيديو معين إذا أردت بثًا رئيسيًا ديناميكيًا أيضًا.
+            // مثال: featuredStreamPlayer.href = `video.html?id=featured_video_id`;
+        });
+    </script>
+</body>
+</html>
