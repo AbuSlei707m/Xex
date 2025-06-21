@@ -332,7 +332,7 @@
 
       function createVideoCard(video) {
         const videoCardLink = document.createElement('a');
-        videoCardLink.href = `video.html?id=${video.videoId}`;
+        videoCardLink.href = `video.html?src=${encodeURIComponent(video.videoId)}`;
         videoCardLink.classList.add('stream-card');
 
         videoCardLink.innerHTML = `
