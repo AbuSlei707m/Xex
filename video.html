@@ -8,33 +8,103 @@
   <style>
     body {
       margin: 0;
-      background-color: #000;
+      background: linear-gradient(135deg, #1c1c1c, #2e2e2e);
+      font-family: 'Cairo', sans-serif;
+      color: white;
       display: flex;
-      justify-content: center;
+      flex-direction: column;
       align-items: center;
+      justify-content: flex-start;
+      padding-top: 40px;
       height: 100vh;
     }
+
+    #player-container {
+      width: 90%;
+      max-width: 900px;
+      border: 2px solid #444;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+      margin-bottom: 20px;
+    }
+
     #player {
       width: 100%;
-      max-width: 100%;
-      height: 100vh;
+      height: 500px;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .controls button {
+      background-color: #ff0055;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .controls button:hover {
+      background-color: #e6004c;
+    }
+
+    .like-button {
+      background-color: #2196f3;
+    }
+
+    .like-button:hover {
+      background-color: #1976d2;
     }
   </style>
 </head>
 <body>
-  <div id="player"></div>
+
+  <div id="player-container">
+    <div id="player"></div>
+  </div>
+
+  <div class="controls">
+    <button onclick="downloadVideo()">تحميل الفيديو</button>
+    <button class="like-button" onclick="likeVideo()">👍 أعجبني</button>
+  </div>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const videoSrc = urlParams.get('src');
+
     if (videoSrc) {
       var player = new Playerjs({
         id: "player",
         file: videoSrc
       });
     } else {
-      document.body.innerHTML = '<p style="color:white;text-align:center">لا يوجد فيديو لعرضه</p>';
+      document.getElementById("player-container").innerHTML = '<p style="color:white;text-align:center;padding: 20px;">لا يوجد فيديو لعرضه</p>';
+    }
+
+    function downloadVideo() {
+      if (videoSrc) {
+        const link = document.createElement('a');
+        link.href = videoSrc;
+        link.download = 'video.mp4';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      } else {
+        alert("لا يوجد فيديو لتحميله.");
+      }
+    }
+
+    function likeVideo() {
+      alert("شكراً على إعجابك!");
     }
   </script>
+
 </body>
 </html>
